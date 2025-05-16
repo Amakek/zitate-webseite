@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zitate-Seite</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e8f0fe;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 600px;
+            border-radius: 12px;
+        }
+        h1 {
+            font-size: 28px;
+            color: #333;
+        }
+        p {
+            font-style: italic;
+            margin: 20px 0;
+            font-size: 18px;
+            color: #555;
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #357abd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Zitat des Tages</h1>
+        <input type="text" id="suche" placeholder="Zitat suchen..." oninput="sucheZitate()">
+        <p id="zitat">"Der Weg ist das Ziel." - Konfuzius</p>
+        <button onclick="neuesZitat()">Neues Zitat</button>
+    </div>
+
+    <script>
+        const zitate = [
+            "Der Weg ist das Ziel. - Konfuzius",
+            "Dough!. - Homer Simpson",
+            "Peter, the horse is here. - Lois Griffin",
+            "Lerne aus der Vergangenheit, träume von der Zukunft, aber lebe in der Gegenwart. - Albert Einstein",
+            "Gib niemals auf, denn du weißt nie, wie nah du am Ziel bist. - Unbekannt",
+            "Erfolg ist die Summe kleiner Anstrengungen, die Tag für Tag wiederholt werden. - Robert Collier",
+            "Glaube an dich selbst und alles ist möglich. - Unbekannt",
+            "Mut steht am Anfang des Handelns, Glück am Ende. - Demokrit",
+            "Wer kämpft, kann verlieren. Wer nicht kämpft, hat schon verloren. - Bertolt Brecht",
+            "Die einzige Grenze für unsere Verwirklichung von morgen sind unsere Zweifel von heute. - Franklin D. Roosevelt",
+            "Ich bin nicht fett, nur sehr breit gebaut! - Aman Melawie Asmat",
+            "Tu, was du kannst, mit dem, was du hast, wo du bist. - Theodore Roosevelt",
+            "Die größte Gefahr in Zeiten der Turbulenzen ist nicht die Turbulenz selbst, sondern unser Handeln. - Peter Drucker",
+            "Nur wer sein Ziel kennt, findet den Weg. - Laozi",
+            "Alles, was du dir vorstellen kannst, ist real. - Pablo Picasso",
+            "Glück ist das einzige, was sich verdoppelt, wenn man es teilt. - Albert Schweitzer",
+            "Wer immer tut, was er schon kann, bleibt immer das, was er schon ist. - Henry Ford",
+            "Die Zukunft gehört denen, die an die Schönheit ihrer Träume glauben. - Eleanor Roosevelt",
+            "Wir sind, was wir wiederholt tun. Exzellenz ist also keine Handlung, sondern eine Gewohnheit. - Aristoteles",
+            "Hindernisse sind diese furchterregenden Dinge, die du siehst, wenn du dein Ziel aus den Augen verlierst. - Henry Ford",
+            "Man muss das Unmögliche versuchen, um das Mögliche zu erreichen. - Hermann Hesse",
+            "Alles Große in unserer Welt geschieht nur, weil jemand mehr tut, als er muss. - Hermann Gmeiner",
+            "Jeder Tag ist eine neue Chance, das zu tun, was du möchtest. - Friedrich Schiller",
+            "Nicht weil es schwer ist, wagen wir es nicht, sondern weil wir es nicht wagen, ist es schwer. - Seneca",
+            "Wer etwas will, findet Wege. Wer etwas nicht will, findet Gründe. - Unbekannt",
+            "Dein Leben wird nicht besser durch Zufall, sondern durch Veränderung. - Jim Rohn",
+            "Große Taten entstehen nicht durch große Stärke, sondern durch Ausdauer. - Samuel Johnson",
+            "Ein Ziel ist ein Traum mit einer Frist. - Napoleon Hill",
+            "Die beste Zeit, einen Baum zu pflanzen, war vor 20 Jahren. Die zweitbeste Zeit ist jetzt. - Chinesisches Sprichwort",
+            "Jeder Mensch ist der Architekt seiner eigenen Zukunft. - Sallust",
+            "Wenn du schnell gehen willst, geh allein. Wenn du weit gehen willst, geh mit anderen. - Afrikanisches Sprichwort",
+            "Die Kunst, ein erfülltes Leben zu führen, besteht darin, nicht nach Perfektion zu streben, sondern nach Fortschritt. - Unbekannt",
+            "Imagine if Ninja got a loow taper fade. - EricDoa",
+            "Man weiß nie, wann die Chance kommt, aber man merkt es, wenn man sie verpasst hat. - Amael Hardegger",
+            "Ich habe keine besondere Begabung, sondern bin nur leidenschaftlich neugierig. - Albert Einstein",
+            "Erfolg ist nicht der Schlüssel zum Glück. Glück ist der Schlüssel zum Erfolg. - Albert Schweitzer",
+            "Nur wer riskiert, zu weit zu gehen, kann herausfinden, wie weit man gehen kann. - T. S. Eliot",
+            "Was du heute kannst besorgen, das verschiebe nicht auf morgen. - Sprichwort",
+            "Der Klügere gibt nach – eine traurige Wahrheit, die die Dummen herrschen lässt. - Marie von Ebner-Eschenbach",
+            "Humor ist der Knopf, der verhindert, dass uns der Kragen platzt. - Joachim Ringelnatz",
+            "Wenn Plan A nicht funktioniert, keine Panik – das Alphabet hat noch 25 andere Buchstaben. - Unbekannt",
+            "Alles nervt! - Sophia Deltouzos",
+            "Der Himmel ist blau. - Thien Tim Cao",
+            "Der Himmel ist violett. - Amakek",
+            "Lasst mich alle in ruhe! - Sophia Deltouzos"
+        ];
+
+        let aktuellesZitat = "";
+
+        function neuesZitat() {
+            const zitatEl = document.getElementById("zitat");
+            let zufall = Math.floor(Math.random() * zitate.length);
+            aktuellesZitat = zitate[zufall];
+            zitatEl.innerText = aktuellesZitat;
+        }
+
+        function sucheZitate() {
+            const input = document.getElementById("suche").value.toLowerCase();
+            const zitatEl = document.getElementById("zitat");
+            const gefiltert = zitate.filter(z => z.toLowerCase().includes(input));
+            if (gefiltert.length > 0) {
+                zitatEl.innerText = gefiltert[0];
+                aktuellesZitat = gefiltert[0];
+            } else {
+                zitatEl.innerText = "Kein Zitat gefunden.";
+                aktuellesZitat = "";
+            }
+        }
+    </script>
+</body>
+</html>
